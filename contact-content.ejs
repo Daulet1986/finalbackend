@@ -1,0 +1,48 @@
+<h1>Contact Us</h1>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    .contact-info {
+        margin-top: 20px;
+    }
+
+    .contact-info a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .contact-info a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<!-- Google Map -->
+<div id="map" style="height: 400px; width: 100%;"></div>
+
+<!-- Contact Information -->
+<div class="contact-info">
+    <p>Follow us on mail: <a href="https://www.gmail.com/Eurasia_news" target="_blank">@Eurasia_news</a></p>
+</div>
+
+<div id="map"></div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCR2yX-Y0l9_bbUz4KqgW5yG0o0kqztA_0&callback=initMap" async defer></script>
+<script>
+    function initMap() {
+        var prague = { lat: 50.0755, lng: 14.4378 }; 
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: prague 
+        });
+        var marker = new google.maps.Marker({
+            position: prague,
+            map: map
+        });
+    }
+</script>

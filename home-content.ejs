@@ -1,0 +1,253 @@
+<!-- Popup Container -->
+<div id="popupContainer" class="popup-container" style="display: none;">
+    <div class="popup-content">
+        <h1>EURASIA NEWS</h1>
+        <p>Key Events. Unified Space. Eurasia News - Your Gateway to Global Updates!</p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+</div>
+<div id="exchangeRatesContainer" class="exchange-rates-container">
+    <h2>Current Exchange Rate for SEK</h2>
+    <div id="exchangeRate">Loading...</div>
+</div>
+<script>
+    // Function to show the popup
+    function showPopup() {
+        document.getElementById('popupContainer').style.display = 'block';
+    }
+
+    // Function to close the popup
+    function closePopup() {
+        document.getElementById('popupContainer').style.display = 'none';
+    }
+
+    // Show the popup after 3 seconds
+    setTimeout(showPopup, 3000);
+
+
+    function loadNewsByCountry(countryCode) {
+    const apiKey = '20ef47dd8a2143098f619d72740bbc15'; // API for News
+    const apiUrl = `https://newsapi.org/v2/top-headlines?country=${countryCode}&apiKey=${apiKey}`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const articles = data.articles;
+            let newsHtml = '';
+            articles.forEach(article => {
+                newsHtml += `
+                    <div class="news-item">
+                        <h3><a href="${article.url}" target="_blank">${article.title}</a></h3>
+                        <p>${article.description}</p>
+                    </div>
+                `;
+            });
+            document.getElementById('newsContent').innerHTML = newsHtml;
+        })
+        .catch(error => {
+            console.error('Error fetching news:', error);
+            document.getElementById('newsContent').innerHTML = 'Failed to load news.';
+        });
+    }
+    function determineUserCountryAndLoadNews() {
+    const ipinfoToken = 'cf6a19cce225f0'; // My key API from IPinfo for finding geolocation and making actual local news
+    fetch(`https://ipinfo.io?token=${ipinfoToken}`)
+        .then(response => response.json())
+        .then(data => {
+            const countryCode = data.country.toLowerCase();
+            loadNewsByCountry(countryCode);
+        })
+        .catch(error => {
+            console.error('Error fetching IP info:', error);
+            loadNewsByCountry('us'); я
+        });
+}
+window.onload = function() {
+    determineUserCountryAndLoadNews()
+    loadNewsByCountry();
+    loadExchangeRates()
+};
+
+function loadExchangeRates() {
+    const exchangeApiKey = 'd9902be61c773643fd14b390'; // My API for exchange of money
+    const exchangeUrl = `https://v6.exchangerate-api.com/v6/${exchangeApiKey}/latest/SEK`;
+
+    fetch(exchangeUrl)
+        .then(response => response.json())
+        .then(data => {
+            const rates = data.conversion_rates;
+            const usdRate = (1 / rates.USD).toFixed(4); 
+            const eurRate = (1 / rates.EUR).toFixed(4); 
+            const cnyRate = (1 / rates.CNY).toFixed(4); 
+            const rubRate = (1 / rates.RUB).toFixed(4); 
+            document.getElementById('exchangeRate').innerHTML = `
+                <p>1 USD = ${usdRate} SEK</p>
+                <p>1 EUR = ${eurRate} SEK</p>
+                <p>1 CNY = ${cnyRate} SEK</p>
+                <p>1 RUB = ${rubRate} SEK</p>
+            `;
+        })
+        .catch(error => console.error('Error fetching exchange rates:', error));
+}
+    const container = document.getElementById('exchangeRatesContainer');
+        container.style.border = '2px solid #000';
+        container.style.backgroundColor = '#f0f0f0';
+        container.style.padding = '10px';
+        container.style.borderRadius = '5px';
+        container.style.color = '#003366'; 
+        const h2 = container.querySelector('h2');
+        h2.style.color = '#002244'; 
+        h2.style.fontFamily = 'Times New Roman, serif'; 
+        const p = container.querySelectorAll('p');
+        p.forEach(el => {
+            el.style.fontFamily = 'Arial, sans-serif'; 
+            el.style.fontSize = '14px'; 
+        });
+</script>
+
+<style>/*popup style*/
+    .popup-container {
+        position: fixed;
+        top: 20px;
+        left: 20px; 
+        width: auto;
+        max-width: 300px;
+        background-color: #1e1e1e;
+        color: #ffffff; 
+        text-align: center;
+        padding: 20px;
+        border-radius: 8px; 
+        z-index: 1000;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4); 
+    }
+
+    .popup-content h1,
+    .popup-content p {
+        margin: 10px 0;
+    }
+
+    button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff; /* Синий цвет */
+        color: white;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3; /* Темно-синий цвет при наведении */
+    }
+    /*news style*/
+    .news-container {
+        margin-top: 20px;
+        background-color: #f0f0f0; 
+        padding: 20px;
+        border-radius: 10px; 
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    }
+
+    .news-container h2 {
+        color: #000000; 
+        margin-bottom: 20px; 
+    }
+
+    .news-item {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e1e1e1;
+    }
+
+    .news-item:last-child {
+        border-bottom: none; 
+    }
+
+    .news-item h3 {
+        margin-bottom: 5px;
+        font-size: 18px; 
+    }
+
+    .news-item h3 a {
+        color: #8B0000; 
+        text-decoration: none; 
+    }
+
+    .news-item h3 a:hover {
+        text-decoration: underline;
+        color: #5a0000; 
+    }
+
+    .news-item p {
+        margin-top: 0;
+        font-size: 14px; 
+        color: #4e4e4e;
+    }
+</style>
+
+<!-- Carousel Code -->
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img class="d-block w-100" src="/img/img1.jpg" alt="1pic">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="/img/img2.jpg" alt="2pic">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="/img/img3.jpg" alt="3pic">
+        </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+<div id="newsColumn" class="news-container">
+    <h2>Latest News</h2>
+    <div id="newsContent">Loading news...</div>
+</div>
+<!-- This section is for the admin to create new publications -->
+<% if (user && user.username==='daulet' ) { %>
+    <div class="publication-form">
+        <h2>Create New Publication</h2>
+        <form action="/create-publication" method="post">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Publication</button>
+        </form>
+    </div>
+    <% } %>
+        <% publications.forEach(function(publication) { %>
+            <div class="publication">
+                <h3>
+                    <%= publication.name %>
+                </h3>
+                <p>
+                    <%= publication.description %>
+                </p>
+                <% if (user && user.username==='daulet' ) { %>
+                    <!-- Admin only: Edit and Delete buttons -->
+                    <!-- Link to the edit form -->
+                    <a href="/edit-publication/<%= publication._id %>" class="btn btn-info">Edit</a>
+                    <form action="/delete-publication/<%= publication._id %>" method="post">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <% } %>
+            </div>
+            <% }) %>
